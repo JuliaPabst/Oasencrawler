@@ -25,8 +25,18 @@ int main()
     Game game;
 
     for(int i = 0; i < WIDTH; i++){
-        for(int j = 0; i < LENGTH; j++){
+        for(int j = 0; i < HEIGHT; j++){
             int randomValue = rand() % 10;
+
+            if(randomValue < 4){
+                game.world[i][j] = none;
+            } else if(randomValue < 8){
+                game.world[i][j] = danger;
+            } else if (randomValue < 9){
+                game.world[i][j] = well;
+            } else if (randomValue == 9){
+                game.world[i][j] = relic;
+            }
         }
     }
 
