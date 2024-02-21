@@ -1,15 +1,20 @@
 #include <iostream>
+#include <cstdlib> // rand() and srand()
+#include <ctime> // time()
+
+#define WIDTH 5
+#define HEIGHT 5
 
 using namespace std;
 
 typedef enum {
-    none, danger, spring, relict
+    none, danger, well, relic
 } fields;
 
 int main()
 {
 
 
-    cout << "Hello world!" << endl;
+
     return 0;
 }
