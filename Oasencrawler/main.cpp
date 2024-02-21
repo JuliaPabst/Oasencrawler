@@ -11,8 +11,16 @@ typedef enum {
     none, danger, well, relic
 } fields;
 
+struct game {
+    fields world[WIDTH][HEIGHT];
+    int x;
+    int y;
+    };
+
 int main()
 {
+    // seed random number generator
+    srand(static_cast<unsigned int>(time(0)));
 
 
 
