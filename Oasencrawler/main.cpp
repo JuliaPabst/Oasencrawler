@@ -12,25 +12,29 @@ typedef enum {
 } fields;
 
 typedef struct {
+    int width = WIDTH;
+    int height = HEIGHT;
     fields world[WIDTH][HEIGHT];
+    int relicsTotal;
     int x = 0;
     int y = 0;
     int health = 5;
-    int relicPoint = 0;
+    int relicsGathered = 0;
 } Game;
 
 int main()
 {
     // seed random number generator
     srand(static_cast<unsigned int>(time(0)));
-    int width = WIDTH;
-    int height = HEIGHT;
+
     bool relicPlaced = false;
+    char currentMove = 'a';
 
     Game game;
 
-    for(int i = 0; i < width; i++){
-        for(int j = 0; i < height; j++){
+    // fill playing field
+    for(int i = 0; i < game.width; i++){
+        for(int j = 0; i < game.height; j++){
             int randomValue = rand() % 10;
 
             if(randomValue < 4){
@@ -41,16 +45,24 @@ int main()
                 game.world[i][j] = well;
             } else if (randomValue == 9){
                 game.world[i][j] = relic;
+                game.relicsTotal++;
                 relicPlaced = true;
             }
             cout << game.world[i][j] << " ";
         }
-        cout << "\n" << endl;
+        cout << " " << endl;
     }
 
     if (!relicPlaced){
         game.world[rand() % 5][rand() % 5] = relic;
     }
+
+    while(currentMove != 'x' && game.health > 0 && game.relicsGathered < game.relicsTotal){
+        cout << "Enter your next move (w = up, a = left, s = right, d = down): " << endl;
+        cin >> currentMove;
+
+    }
+
 
 
 
