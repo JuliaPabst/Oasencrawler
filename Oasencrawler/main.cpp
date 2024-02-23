@@ -34,7 +34,7 @@ int main()
 
     // fill playing field
     for(int i = 0; i < game.width; i++){
-        for(int j = 0; i < game.height; j++){
+        for(int j = 0; j < game.height; j++){
             int randomValue = rand() % 10;
 
             if(randomValue < 4){
@@ -60,6 +60,20 @@ int main()
     while(currentMove != 'x' && game.health > 0 && game.relicsGathered < game.relicsTotal){
         cout << "Enter your next move (w = up, a = left, s = right, d = down): " << endl;
         cin >> currentMove;
+        switch (currentMove) {
+        case 'w':
+            game.y++;
+            break;
+        case 'a':
+            game.x--;
+            break;
+        case 's':
+            game.y--;
+            break;
+        case 'd':
+            game.x++;
+            break;
+        }
 
     }
 

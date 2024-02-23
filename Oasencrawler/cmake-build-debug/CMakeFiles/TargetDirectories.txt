@@ -1,0 +1,3 @@
+/Users/julia/Desktop/Knowledge_Centre/FH_Technikum/Semester2/Objektorientiertes_Programmieren/Oasencrawler/Oasencrawler/cmake-build-debug/CMakeFiles/Oasencrawler.dir
+/Users/julia/Desktop/Knowledge_Centre/FH_Technikum/Semester2/Objektorientiertes_Programmieren/Oasencrawler/Oasencrawler/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/julia/Desktop/Knowledge_Centre/FH_Technikum/Semester2/Objektorientiertes_Programmieren/Oasencrawler/Oasencrawler/cmake-build-debug/CMakeFiles/rebuild_cache.dir
