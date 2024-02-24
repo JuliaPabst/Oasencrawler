@@ -13,12 +13,17 @@ typedef enum {
 } fields;
 
 typedef struct {
+    int x = 0;
+    int y = 0;
+} PlayerCoordinates;
+
+
+typedef struct {
     int width = WIDTH;
     int height = HEIGHT;
     fields world[WIDTH][HEIGHT];
     int relicsTotal = 0;
-    int x = 0;
-    int y = 0;
+    PlayerCoordinates playerCoordinates;
     int health = 5;
     int relicsGathered = 0;
 } Game;
@@ -52,8 +57,8 @@ void initializeWorld(Game& game){
 }
 
 bool moveCharacter(Game& game, char currentMove) {
-    int newX = game.x;
-    int newY = game.y;
+    int newX = game.playerCoordinates.x;
+    int newY = game.playerCoordinates.y;
     switch (currentMove) {
     case 'w':
         newX--;
@@ -73,8 +78,8 @@ bool moveCharacter(Game& game, char currentMove) {
     }
 
     if (newX >= 0 && newX < game.width && newY >= 0 && newY < game.height) {
-        game.x = newX;
-        game.y = newY;
+        game.playerCoordinates.x = newX;
+        game.playerCoordinates.y = newY;
         return true;
     } else {
         cout << "Bewegung außerhalb der Grenzen. Bitte erneut versuchen: " << endl;
@@ -83,7 +88,7 @@ bool moveCharacter(Game& game, char currentMove) {
 }
 
 void handleField(Game& game) {
-    fields currentField = game.world[game.x][game.y];
+    fields currentField = game.world[game.playerCoordinates.x][game.playerCoordinates.y];
     switch (currentField) {
     case none:
         break;
@@ -108,7 +113,7 @@ void handleField(Game& game) {
         break;
     }
 
-    game.world[game.x][game.y] = alreadyVisited;
+    game.world[game.playerCoordinates.x][game.playerCoordinates.y] = alreadyVisited;
 }
 
 void printStatus(Game game) {
@@ -119,7 +124,7 @@ void printStatus(Game game) {
 void printWorld(Game game){
     for(int i = 0; i < game.width; i++){
         for(int j = 0; j < game.height; j++){
-            if (i == game.x && j == game.y){
+            if (i == game.playerCoordinates.x && j == game.playerCoordinates.y){
                 cout << "X" << " ";
             }
             else if(game.world[i][j] != alreadyVisited){
@@ -145,16 +150,16 @@ void testGame() {
     // Test: Movement within borders
     bool canMove = moveCharacter(testGame, 'd');
     assert(canMove == true);
-    assert(testGame.y == 1);
+    assert(testGame.playerCoordinates.y == 1);
 
     // Test: Movement out of borders
-    testGame.x = 0; testGame.y = 0;
+    testGame.playerCoordinates.x = 0; testGame.playerCoordinates.y = 0;
     canMove = moveCharacter(testGame, 'w');
     assert(canMove == false);
 
     // Test: gather relict
     testGame.world[1][1] = relic;
-    testGame.x = 1; testGame.y = 1;
+    testGame.playerCoordinates.x = 1; testGame.playerCoordinates.y = 1;
     int relicsBefore = testGame.relicsTotal;
     handleField(testGame);
     assert(testGame.relicsGathered == 1);
@@ -195,6 +200,9 @@ int main()
     handleField(game);
     printStatus(game);
 
+    // testGame();
+    // testPlayThrough(game);
+
     char currentMove;
     while (game.health > 0 && game.relicsGathered < game.relicsTotal) {
         cout << " " << endl;
@@ -210,10 +218,6 @@ int main()
             printStatus(game);
         }
     }
-
-    // testGame();
-
-    // testPlayThrough(game);
 
     if (game.relicsTotal == 0) {
         cout << "Herzlichen Glückwunsch! Du hast alle Relikte gesammelt." << endl;
