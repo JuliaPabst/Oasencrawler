@@ -68,7 +68,7 @@ bool moveCharacter(Game& game, char currentMove) {
         newY++;
         break;
     default:
-        cout << "Ungültige Bewegung. Bitte erneut versuchen: ";
+        cout << "Ungültige Bewegung. Bitte erneut versuchen: " << endl;
         return false;
     }
 
@@ -77,7 +77,7 @@ bool moveCharacter(Game& game, char currentMove) {
         game.y = newY;
         return true;
     } else {
-        cout << "Bewegung außerhalb der Grenzen. Bitte erneut versuchen: ";
+        cout << "Bewegung außerhalb der Grenzen. Bitte erneut versuchen: " << endl;
         return false;
     }
 }
@@ -163,6 +163,27 @@ void testGame() {
     cout << "Alle Tests erfolgreich abgeschlossen." << endl;
 }
 
+void testPlayThrough(Game& game){
+    char moves[4] = {'w', 'a', 's', 'd'};
+    int moveCount = 0;
+
+    while (game.health > 0 && game.relicsTotal != 0) {
+        char currentMove = moves[rand() % 4];
+
+        if (moveCharacter(game, currentMove)) {
+            handleField(game);
+        }
+
+        moveCount++;
+
+        // security measure to prevent endless loop
+        if (moveCount > 1000) {
+            cout << "Sicherheitsabbruch nach 1000 Bewegungen." << endl;
+            break;
+        }
+    }
+}
+
 
 int main()
 {
@@ -171,9 +192,11 @@ int main()
     Game game;
 
     initializeWorld(game);
+    handleField(game);
+    printStatus(game);
 
     char currentMove;
-    /*while (game.health > 0 && game.relicsGathered < game.relicsTotal) {
+    while (game.health > 0 && game.relicsGathered < game.relicsTotal) {
         cout << " " << endl;
         printWorld(game);
         cout << "Gib deinen nächsten Zug ein (w = hoch, a = links, s = unten, d = rechts, x = Spiel beenden): ";
@@ -186,9 +209,11 @@ int main()
             handleField(game);
             printStatus(game);
         }
-    } */
+    }
 
-    testGame();
+    // testGame();
+
+    // testPlayThrough(game);
 
     if (game.relicsTotal == 0) {
         cout << "Herzlichen Glückwunsch! Du hast alle Relikte gesammelt." << endl;
