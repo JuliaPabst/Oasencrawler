@@ -12,11 +12,11 @@ typedef enum {
     none, danger, well, relic, alreadyVisited
 } Fields;
 
-tyedef enum {
-    strength,
-    speed,
-    intelligence
-} Attributs;
+tyedef struct {
+    int strength = 0;
+    int spee = 0;
+    int intelligence = 0;
+} Attributes;
 
 typedef struct {
     int x, y;
@@ -39,6 +39,7 @@ typedef struct {
     int relicsGathered = 0;
     bool gameWon = true;
     int level = 1;
+    Attributes attributes;
 } Game;
 
 void initializeWorld(Game& game){
