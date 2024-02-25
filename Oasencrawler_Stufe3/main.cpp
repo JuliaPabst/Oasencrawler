@@ -151,11 +151,11 @@ void handleField(Game& game) {
             if(game.artefacts.spinach > 0){
                 cout << "Additionally, you have " << game.artefacts.spinach << " can(s) of spinach. They each boost your strength by 1 point"  << endl;
             }
-            cout << "To win against the bear you need to get at least" << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cout << "To win against the bear you need to get at least " << 7+game.level << " points in total! Press 't' to throw the dice!" << endl;
             cin >> throwDice;
             dice = (rand() % 6) + 1;
             cout << "You threw a " << dice << endl;
-            if((dice + game.artefacts.spinach + game.attributes.strength) > 10 + game.level){
+            if((dice + game.artefacts.spinach + game.attributes.strength) >= 7 + game.level){
                 cout << "Lucky you! You won!" << endl;
             } else {
                 cout << "The bear beat you - you lose one health point!" << endl;
@@ -166,29 +166,30 @@ void handleField(Game& game) {
             if(game.artefacts.redBull > 0){
                 cout << "Additionally, you have " << game.artefacts.redBull << " can(s) of Red Bull. They each boost your speed by 1 point"  << endl;
             }
-            cout << "To outrun the cheetah you need to get at least " << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cout << "To outrun the cheetah you need to get at least " << 7+game.level << " points in total! Press 't' to throw the dice!" << endl;
             cin >> throwDice;
             dice = (rand() % 6) + 1;
             cout << "You threw a " << dice << endl;
-            if((dice + game.artefacts.redBull + game.attributes.speed) > 10 + game.level){
+            if((dice + game.artefacts.redBull + game.attributes.speed) >= 7 + game.level){
                 cout << "Lucky you! You outran the cheetah!" << endl;
             } else {
                 cout << "The cheetah beat you - you lose one health point!" << endl;
                 game.health--;
             }
         } else {
-            cout << "Danger! A dolphin is asking you for a game of chess! You need to prove your intelligence! Your current intelligence level is" << game.attributes.intelligence << endl;
+            cout << "Danger! A dolphin is asking you for a game of chess! You need to prove your intelligence! Your current intelligence level is " << game.attributes.intelligence << endl;
             if(game.artefacts.walnut > 0){
                  cout << "Additionally, you have " << game.artefacts.walnut << " walnut(s). They each boost your speed by 1 point"  << endl;
             }
-            cout << "To win against the dolphin you need to get at least " << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cout << "To win against the dolphin you need to get at least " << 7 + game.level << " points in total! Press 't' to throw the dice!" << endl;
             cin >> throwDice;
             dice = (rand() % 6) + 1;
             cout << "You threw a " << dice << endl;
-            if((dice + game.artefacts.walnut + game.attributes.intelligence) > 10 + game.level){
+            if((dice + game.artefacts.walnut + game.attributes.intelligence) >= 7 + game.level){
                  cout << "Lucky you! You beat the dolphin!" << endl;
             } else {
                 cout << "The dolphin beat you - you lose on health point!" << endl;
+                game.health--;
             }
         }
         break;
