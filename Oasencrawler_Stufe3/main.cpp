@@ -12,11 +12,17 @@ typedef enum {
     none, danger, well, relic, alreadyVisited
 } Fields;
 
-tyedef struct {
-    int strength = 0;
-    int spee = 0;
-    int intelligence = 0;
+typedef struct {
+    int strength = 5;
+    int speed = 5;
+    int intelligence = 5;
 } Attributes;
+
+typedef struct {
+    int spinach = 0;
+    int redBull = 0;
+    int walnut = 0;
+} Artefacts;
 
 typedef struct {
     int x, y;
@@ -40,6 +46,7 @@ typedef struct {
     bool gameWon = true;
     int level = 1;
     Attributes attributes;
+    Artefacts artefacts;
 } Game;
 
 void initializeWorld(Game& game){
@@ -134,20 +141,62 @@ void handleField(Game& game) {
     switch (currentField) {
     case none:
         break;
-    case danger:
-        // the higher the level, the more health points are subtracted
-        game.health -= game.level;
-        cout << "Gefahr! Du hast ein Lebenspunkt verloren." << endl;
+    case danger:{
+        int attribute = rand() % 3;
+        int dice = 0;
+
+        if(attribute == 0){
+            cout << "Gefahr! Du musst deine Stärke beweisen! Du hast aktuell eine Stärke von: " << game.attributes.strength << endl;
+            if(game.artefacts.spinach > 0){
+                cout << "Zudem hast du so viele Portionen Spinat, die dir jeweils einen Stärkeboost von einem Punkt geben: " << game.artefacts.spinach << endl;
+            }
+            cout << "Bestehe nun den Kampf mit einem Troll, indem du mit Würfeln auf über " << 10+game.level << " Punkte kommst! Um zu würfeln, drücke 'd'!" << endl;
+            dice = (rand() % 6) + 1;
+            cout << "Du hast " << dice << " gewürfelt!";
+            if((dice + game.artefacts.spinach + game.attributes.strength) > (10 + game.level){
+                cout << "Glück gehabt! Du hast gewonnen!" << endl;
+            } else {
+                cout << "Du hast verloren und verlierst einen Lebenspunkt!" << endl;
+            }
+        }
         break;
-    case well:
+    }
+    case well:{
         game.health++;
         cout << "Du hast einen Brunnen gefunden und einen Lebenspunkt gewonnen." << endl;
+
+        int artefact = rand() % 3;
+        if(artefact == 0){
+            game.artefacts.spinach++;
+            cout << "Du hast Spinat gefunden!" << endl;
+        } else if (artefact == 1){
+            game.artefacts.redBull++;
+            cout << "Du hast ein Red Bull gefunden!" << endl;
+        } else {
+            game.artefacts.walnut++;
+            cout << "Du hast eine Walnuss gefunden!" << endl;
+        }
+
         break;
-    case relic:
+    }
+    case relic:{
         game.relicsGathered++;
         game.relicsTotal--;
         cout << "Du hast ein Relikt gefunden!" << endl;
+
+        int artefact = rand() % 3;
+        if(artefact == 0){
+            game.artefacts.spinach++;
+            cout << "Du hast Spinat gefunden!" << endl;
+        } else if (artefact == 1){
+            game.artefacts.redBull++;
+            cout << "Du hast ein Red Bull gefunden!" << endl;
+        } else {
+            game.artefacts.walnut++;
+            cout << "Du hast eine Walnuss gefunden!" << endl;
+        }
         break;
+    }
     case alreadyVisited:
         break;
     default:
