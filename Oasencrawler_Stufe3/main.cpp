@@ -94,7 +94,7 @@ bool moveCharacter(Game& game, char currentMove) {
         newY++;
         break;
     default:
-        cout << "Ung¸ltige Bewegung. Bitte erneut versuchen: " << endl;
+        cout << "Invalid move. Try again: " << endl;
         return false;
     }
 
@@ -103,7 +103,7 @@ bool moveCharacter(Game& game, char currentMove) {
         game.playerCoordinates.y = newY;
         return true;
     } else {
-        cout << "Bewegung auﬂerhalb der Grenzen. Bitte erneut versuchen: " << endl;
+        cout << "Movement out of borders - try again: " << endl;
         return false;
     }
 }
@@ -144,37 +144,69 @@ void handleField(Game& game) {
     case danger:{
         int attribute = rand() % 3;
         int dice = 0;
+        char throwDice = ' ';
 
         if(attribute == 0){
-            cout << "Gefahr! Du musst deine Stärke beweisen! Du hast aktuell eine Stärke von: " << game.attributes.strength << endl;
+            cout << "Danger! There is a bear in front of you! You need to prove your strength! Currently you have a strength of " << game.attributes.strength << endl;
             if(game.artefacts.spinach > 0){
-                cout << "Zudem hast du so viele Portionen Spinat, die dir jeweils einen Stärkeboost von einem Punkt geben: " << game.artefacts.spinach << endl;
+                cout << "Additionally, you have " << game.artefacts.spinach << " can(s) of spinach. They each boost your strength by 1 point"  << endl;
             }
-            cout << "Bestehe nun den Kampf mit einem Troll, indem du mit Würfeln auf über " << 10+game.level << " Punkte kommst! Um zu würfeln, drücke 'd'!" << endl;
+            cout << "To win against the bear you need to get at least" << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cin >> throwDice;
             dice = (rand() % 6) + 1;
-            cout << "Du hast " << dice << " gewürfelt!";
-            if((dice + game.artefacts.spinach + game.attributes.strength) > (10 + game.level){
-                cout << "Glück gehabt! Du hast gewonnen!" << endl;
+            cout << "You threw a " << dice << endl;
+            if((dice + game.artefacts.spinach + game.attributes.strength) > 10 + game.level){
+                cout << "Lucky you! You won!" << endl;
             } else {
-                cout << "Du hast verloren und verlierst einen Lebenspunkt!" << endl;
+                cout << "The bear beat you - you lose one health point!" << endl;
+                game.health--;
+            }
+        } else if (attribute == 1){
+            cout << "Danger! A cheetah is chasing you! You need to prove your speed! Your current speed level is " << game.attributes.speed << endl;
+            if(game.artefacts.redBull > 0){
+                cout << "Additionally, you have " << game.artefacts.redBull << " can(s) of Red Bull. They each boost your speed by 1 point"  << endl;
+            }
+            cout << "To outrun the cheetah you need to get at least " << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cin >> throwDice;
+            dice = (rand() % 6) + 1;
+            cout << "You threw a " << dice << endl;
+            if((dice + game.artefacts.redBull + game.attributes.speed) > 10 + game.level){
+                cout << "Lucky you! You outran the cheetah!" << endl;
+            } else {
+                cout << "The cheetah beat you - you lose one health point!" << endl;
+                game.health--;
+            }
+        } else {
+            cout << "Danger! A dolphin is asking you for a game of chess! You need to prove your intelligence! Your current intelligence level is" << game.attributes.intelligence << endl;
+            if(game.artefacts.walnut > 0){
+                 cout << "Additionally, you have " << game.artefacts.walnut << " walnut(s). They each boost your speed by 1 point"  << endl;
+            }
+            cout << "To win against the dolphin you need to get at least " << 10+game.level << " points in total! Press 't' to throw the dice!" << endl;
+            cin >> throwDice;
+            dice = (rand() % 6) + 1;
+            cout << "You threw a " << dice << endl;
+            if((dice + game.artefacts.walnut + game.attributes.intelligence) > 10 + game.level){
+                 cout << "Lucky you! You beat the dolphin!" << endl;
+            } else {
+                cout << "The dolphin beat you - you lose on health point!" << endl;
             }
         }
         break;
     }
     case well:{
         game.health++;
-        cout << "Du hast einen Brunnen gefunden und einen Lebenspunkt gewonnen." << endl;
+        cout << "You found a well and get a health point!" << endl;
 
         int artefact = rand() % 3;
         if(artefact == 0){
             game.artefacts.spinach++;
-            cout << "Du hast Spinat gefunden!" << endl;
+            cout << "You found a can of spinach!" << endl;
         } else if (artefact == 1){
             game.artefacts.redBull++;
-            cout << "Du hast ein Red Bull gefunden!" << endl;
+            cout << "You found a can of red bull!" << endl;
         } else {
             game.artefacts.walnut++;
-            cout << "Du hast eine Walnuss gefunden!" << endl;
+            cout << "You found a walnut!" << endl;
         }
 
         break;
@@ -182,19 +214,20 @@ void handleField(Game& game) {
     case relic:{
         game.relicsGathered++;
         game.relicsTotal--;
-        cout << "Du hast ein Relikt gefunden!" << endl;
+        cout << "You found a relic!" << endl;
 
         int artefact = rand() % 3;
         if(artefact == 0){
             game.artefacts.spinach++;
-            cout << "Du hast Spinat gefunden!" << endl;
+            cout << "You found a can of spinach!" << endl;
         } else if (artefact == 1){
             game.artefacts.redBull++;
-            cout << "Du hast ein Red Bull gefunden!" << endl;
+            cout << "You found a can of red bull!" << endl;
         } else {
             game.artefacts.walnut++;
-            cout << "Du hast eine Walnuss gefunden!" << endl;
+            cout << "You found a walnut!" << endl;
         }
+
         break;
     }
     case alreadyVisited:
@@ -207,8 +240,8 @@ void handleField(Game& game) {
 }
 
 void printStatus(Game game) {
-    cout << "Gesundheit: " << game.health << ", Gesammelte Relikte: " << game.relicsGathered << endl;
-    cout << "Verbleibende Relikte: " << game.relicsTotal << endl;
+    cout << "Health: " << game.health << ", Gathered relics: " << game.relicsGathered << endl;
+    cout << "Relics to be found: " << game.relicsTotal << endl;
 }
 
 void printWorld(Game game){
@@ -255,7 +288,7 @@ void testGame() {
     assert(testGame.relicsGathered == 1);
     assert(relicsBefore == testGame.relicsTotal + 1);
 
-    cout << "Alle Tests erfolgreich abgeschlossen." << endl;
+    cout << "All tests successful." << endl;
 }
 
 void testPlayThrough(Game& game){
@@ -281,25 +314,25 @@ void testPlayThrough(Game& game){
 
             if (game.relicsTotal == 0) {
                 game.gameWon = true;
-                cout << "Herzlichen Gl¸ckwunsch! Du hast alle Relikte gesammelt." << endl;
+                cout << "Congratulations - you won!" << endl;
                 cout << " " << endl;
                 cout << " " << endl;
                 cout << " " << endl;
                 break;
             } else if (game.playerCoordinates.x == game.enemyCoordinates.x && game.playerCoordinates.y == game.enemyCoordinates.y) {
                 game.gameWon = false;
-                cout << "Leider verloren. Der Gegner hat dich erwischt!" << endl;
+                cout << "Damn it, you lost! The enemy caught you!" << endl;
                 break;
             } else if (game.health <= 0) {
                 game.gameWon = false;
-                cout << "Leider verloren. Du hast alle Leben verloren!" << endl;
+                cout << "Damn it, you lost! You don't have any more health points!" << endl;
                 break;
             }
 
             moveCount++;
             // Security measure to prevent an endless loop.
             if (moveCount > 1000) {
-                cout << "Sicherheitsabbruch nach 1000 Bewegungen." << endl;
+                cout << "Stop game after 1000 moves." << endl;
                 break;
             }
         }
@@ -334,10 +367,10 @@ int main()
         while (game.health > 0 && game.relicsTotal > 0 && (game.playerCoordinates.x != game.enemyCoordinates.x || game.playerCoordinates.y != game.enemyCoordinates.y)) {
             cout << " " << endl;
             printWorld(game);
-            cout << "Gib deinen n‰chsten Zug ein (w = hoch, a = links, s = unten, d = rechts, x = Spiel beenden): ";
+            cout << "Type in your next move (w = up, a = left, s = down, d = right, x = end game): ";
             cin >> currentMove;
             if (currentMove == 'x') {
-                cout << "Spiel beendet." << endl;
+                cout << "Game ended." << endl;
                 return 0;
             }
             if (moveCharacter(game, currentMove)) {
@@ -348,8 +381,8 @@ int main()
         }
 
         if (game.relicsTotal == 0 && (game.playerCoordinates.x != game.enemyCoordinates.x || game.playerCoordinates.y != game.enemyCoordinates.y)) {
-            cout << "Herzlichen Gl¸ckwunsch! Du hast alle Relikte gesammelt." << endl;
-            cout << "Mˆchtest du weiterspielen? (y / n): ";
+            cout << "Congratulations - you won!" << endl;
+            cout << "Do you want to rise to the next level? (y / n): ";
             cin >> currentMove;
             if(currentMove == 'n') {
                 return 0;
@@ -358,12 +391,12 @@ int main()
         } else if (game.health <= 0) {
             printWorld(game);
             game.gameWon = false;
-            cout << "Leider verloren. Du hast alle Leben verloren!" << endl;
+            cout << "Damn it, you lost! The enemy caught you!" << endl;
             return 0;
         } else if (game.playerCoordinates.x == game.enemyCoordinates.x && game.playerCoordinates.y == game.enemyCoordinates.y) {
             printWorld(game);
             game.gameWon = false;
-            cout << "Leider verloren. Der Gegner hat dich erwischt!" << endl;
+            cout << "Damn it, you lost! You don't have any more health points!" << endl;
             return 0;
         }
     }
