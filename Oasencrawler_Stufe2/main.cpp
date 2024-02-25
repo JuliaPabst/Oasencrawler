@@ -32,6 +32,7 @@ typedef struct {
     int health = 5;
     int relicsGathered = 0;
     bool gameWon = true;
+    int level = 1;
 } Game;
 
 void initializeWorld(Game& game){
@@ -127,10 +128,9 @@ void handleField(Game& game) {
     case none:
         break;
     case danger:
-        if (rand() % 6 == 0) {
-            game.health--;
-            cout << "Gefahr! Du hast ein Lebenspunkt verloren." << endl;
-        }
+        // the higher the level, the more health points are subtracted
+        game.health -= game.level;
+        cout << "Gefahr! Du hast ein Lebenspunkt verloren." << endl;
         break;
     case well:
         game.health++;
@@ -206,40 +206,46 @@ void testPlayThrough(Game& game){
     char moves[4] = {'w', 'a', 's', 'd'};
     int moveCount = 0;
 
-    // Initialize enemy coordinates at a random position.
-    game.enemyCoordinates.x = rand() % WIDTH;
-    game.enemyCoordinates.y = rand() % HEIGHT;
-
     // Main game loop.
-    while (game.health > 0 && game.relicsTotal > 0) {
-        printWorld(game);
-        char currentMove = moves[rand() % 4];
-        if (moveCharacter(game, currentMove)) {
-            handleField(game);
-            printStatus(game);
-            moveEnemy(game);
-        }
+    while(game.gameWon){
+        game.enemyCoordinates.x = rand() % WIDTH;
+        game.enemyCoordinates.y = rand() % HEIGHT;
+        initializeWorld(game);
+        handleField(game);
+        printStatus(game);
+        while (game.health > 0 && game.relicsTotal > 0) {
+            printWorld(game);
+            char currentMove = moves[rand() % 4];
+            if (moveCharacter(game, currentMove)) {
+                handleField(game);
+                printStatus(game);
+                moveEnemy(game);
+            }
 
-        // Check for game end conditions.
-        if (game.relicsTotal == 0) {
-            game.gameWon = true;
-            cout << "Herzlichen Glückwunsch! Du hast alle Relikte gesammelt." << endl;
-            break; // Exit loop if all relics are collected.
-        } else if (game.playerCoordinates.x == game.enemyCoordinates.x && game.playerCoordinates.y == game.enemyCoordinates.y) {
-            game.gameWon = false;
-            cout << "Leider verloren. Der Gegner hat dich erwischt!" << endl;
-            break; // Exit loop if player encounters the enemy.
-        } else if (game.health <= 0) {
-            game.gameWon = false;
-            cout << "Leider verloren. Du hast alle Leben verloren!" << endl;
-            break; // Exit loop if health drops to 0 or below.
-        }
 
-        moveCount++;
-        // Security measure to prevent an endless loop.
-        if (moveCount > 1000) {
-            cout << "Sicherheitsabbruch nach 1000 Bewegungen." << endl;
-            break;
+            if (game.relicsTotal == 0) {
+                game.gameWon = true;
+                cout << "Herzlichen Glückwunsch! Du hast alle Relikte gesammelt." << endl;
+                cout << " " << endl;
+                cout << " " << endl;
+                cout << " " << endl;
+                break;
+            } else if (game.playerCoordinates.x == game.enemyCoordinates.x && game.playerCoordinates.y == game.enemyCoordinates.y) {
+                game.gameWon = false;
+                cout << "Leider verloren. Der Gegner hat dich erwischt!" << endl;
+                break;
+            } else if (game.health <= 0) {
+                game.gameWon = false;
+                cout << "Leider verloren. Du hast alle Leben verloren!" << endl;
+                break;
+            }
+
+            moveCount++;
+            // Security measure to prevent an endless loop.
+            if (moveCount > 1000) {
+                cout << "Sicherheitsabbruch nach 1000 Bewegungen." << endl;
+                break;
+            }
         }
     }
 }
@@ -252,22 +258,23 @@ int main()
     srand(static_cast<unsigned int>(time(0)));
     Game game;
 
-
-    initializeWorld(game);
-    handleField(game);
-    printStatus(game);
-
-    //testGame();
-    testPlayThrough(game);
-
-
-    game.enemyCoordinates.x = rand() % WIDTH;
-    game.enemyCoordinates.y = rand() % HEIGHT;
+    // testGame();
+    // testPlayThrough(game);
 
     char currentMove = ' ';
-    game.gameWon = false;
+    game.gameWon = true;
 
-    while (!game.gameWon && currentMove != 'n' && currentMove != 'x') {
+
+    while (game.gameWon && currentMove != 'n' && currentMove != 'x') {
+        initializeWorld(game);
+        handleField(game);
+        printStatus(game);
+        game.enemyCoordinates.x = rand() % WIDTH;
+        game.enemyCoordinates.y = rand() % HEIGHT;
+        game.health = 5;
+        game.relicsGathered = 0;
+        cout << "Level " << game.level << endl;
+
         while (game.health > 0 && game.relicsTotal > 0 && (game.playerCoordinates.x != game.enemyCoordinates.x || game.playerCoordinates.y != game.enemyCoordinates.y)) {
             cout << " " << endl;
             printWorld(game);
@@ -286,22 +293,25 @@ int main()
 
         if (game.relicsTotal == 0 && (game.playerCoordinates.x != game.enemyCoordinates.x || game.playerCoordinates.y != game.enemyCoordinates.y)) {
             cout << "Herzlichen Glückwunsch! Du hast alle Relikte gesammelt." << endl;
-            game.gameWon = true;
             cout << "Möchtest du weiterspielen? (y / n): ";
             cin >> currentMove;
             if(currentMove == 'n') {
                 return 0;
             }
+            game.level++;
         } else if (game.health <= 0) {
             printWorld(game);
+            game.gameWon = false;
             cout << "Leider verloren. Du hast alle Leben verloren!" << endl;
             return 0;
         } else if (game.playerCoordinates.x == game.enemyCoordinates.x && game.playerCoordinates.y == game.enemyCoordinates.y) {
             printWorld(game);
+            game.gameWon = false;
             cout << "Leider verloren. Der Gegner hat dich erwischt!" << endl;
             return 0;
         }
     }
+
 
     return 0;
 }
