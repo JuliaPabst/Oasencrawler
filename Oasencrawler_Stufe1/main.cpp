@@ -8,6 +8,8 @@
 
 using namespace std;
 
+// als Class machen mit public und private
+
 typedef enum {
     none, danger, well, relic, alreadyVisited
 } Fields;

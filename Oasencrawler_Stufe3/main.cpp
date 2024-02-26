@@ -12,29 +12,50 @@ typedef enum {
     none, danger, well, relic, alreadyVisited
 } Fields;
 
-typedef struct {
-    int strength = 5;
-    int speed = 5;
-    int intelligence = 5;
+typedef class {
+    private:
+        int strength = 5;
+        int speed = 5;
+        int intelligence = 5;
 } Attributes;
 
-typedef struct {
-    int spinach = 0;
-    int redBull = 0;
-    int walnut = 0;
+typedef class {
+    private:
+        int spinach = 0;
+        int redBull = 0;
+        int walnut = 0;
 } Artefacts;
 
-typedef struct {
-    int x, y;
+typedef class {
+    private:
+        int x = 0;
+        int y = 0;
 } EnemyCoordinates;
 
-typedef struct {
-    int x = 0;
-    int y = 0;
+typedef class {
+    private:
+        int x = 0;
+        int y = 0;
 } PlayerCoordinates;
 
+typedef class {
+    private:
+        int width = WIDTH;
+        int height = HEIGHT;
+        Fields world[WIDTH][HEIGHT];
+        int relicsTotal = 0;
+} PlayingField;
 
-typedef struct {
+typedef class {
+    private:
+        PlayerCoordinates playerCoordinates;
+        int health = 5;
+        int relicsGathered = 0;
+        char currentMove = 'd';
+} Player;
+
+
+typedef class {
     int width = WIDTH;
     int height = HEIGHT;
     Fields world[WIDTH][HEIGHT];
