@@ -28,7 +28,7 @@ typedef struct {
     PlayerCoordinates playerCoordinates;
     int health = 5;
     int relicsGathered = 0;
-    char currentMove = ' ';
+    char currentMove = 'd';
 } Player;
 
 
@@ -110,7 +110,7 @@ typedef struct {
             newY++;
             break;
         default:
-            cout << "Invalid move. Try again!: " << endl;
+            cout << "Invalid move. Try again! " << endl;
             return false;
         }
 
@@ -119,7 +119,7 @@ typedef struct {
             this->player.playerCoordinates.y = newY;
             return true;
         } else {
-            cout << "Movement out of borders. Try again!: " << endl;
+            cout << "Movement out of borders. Try again! " << endl;
             return false;
         }
     }
@@ -162,6 +162,7 @@ typedef struct {
         assert(this->player.playerCoordinates.y == 1);
 
         // Test: Movement out of borders
+        this->player.currentMove = 'a';
         this->player.playerCoordinates.x = 0; this->player.playerCoordinates.y = 0;
         canMove = this->moveCharacter();
         assert(canMove == false);
@@ -201,18 +202,14 @@ typedef struct {
 } Game;
 
 
-int main()
-{
+int main(){
     // seed random number generator
     srand(static_cast<unsigned int>(time(0)));
     Game game;
-
     game.initializeWorld();
-    game.handleField();
-    game.printStatus();
 
-    game.testGame();
-    game.testPlayThrough();
+    //game.testGame();
+    // game.testPlayThrough();
 
     while (game.player.health > 0 && game.playingField.relicsTotal != 0) {
         cout << " " << endl;
