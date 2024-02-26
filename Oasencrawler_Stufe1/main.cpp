@@ -35,170 +35,170 @@ typedef struct {
 typedef struct {
     PlayingField playingField;
     Player player;
-} Game;
 
-void initializeWorld(Game& game){
-    bool relicPlaced = false;
-    for(int i = 0; i < game.playingField.width; i++){
-        for(int j = 0; j < game.playingField.height; j++){
-            int randomValue = rand() % 10;
+    void initializeWorld(){
+        bool relicPlaced = false;
+        for(int i = 0; i < this->playingField.width; i++){
+            for(int j = 0; j < this->playingField.height; j++){
+                int randomValue = rand() % 10;
 
-            if(randomValue < 4){
-                game.playingField.world[i][j] = none;
-            } else if(randomValue >= 4 && randomValue < 8){
-                game.playingField.world[i][j] = danger;
-            } else if (randomValue == 8){
-                game.playingField.world[i][j] = well;
-            } else if (randomValue == 9){
-                game.playingField.world[i][j] = relic;
-                game.playingField.relicsTotal++;
-                relicPlaced = true;
+                if(randomValue < 4){
+                    this->playingField.world[i][j] = none;
+                } else if(randomValue >= 4 && randomValue < 8){
+                    this->playingField.world[i][j] = danger;
+                } else if (randomValue == 8){
+                    this->playingField.world[i][j] = well;
+                } else if (randomValue == 9){
+                    this->playingField.world[i][j] = relic;
+                    this->playingField.relicsTotal++;
+                    relicPlaced = true;
+                }
             }
+        }
+
+        if (!relicPlaced){
+            this->playingField.world[rand() % this->playingField.width][rand() % this->playingField.height] = relic;
+            this->playingField.relicsTotal++;
         }
     }
 
-    if (!relicPlaced){
-        game.playingField.world[rand() % game.playingField.width][rand() % game.playingField.height] = relic;
-        game.playingField.relicsTotal++;
-    }
-}
-
-bool moveCharacter(Game& game) {
-    int newX = game.player.playerCoordinates.x;
-    int newY = game.player.playerCoordinates.y;
-    switch (game.player.currentMove) {
-    case 'w':
-        newX--;
-        break;
-    case 'a':
-        newY--;
-        break;
-    case 's':
-        newX++;
-        break;
-    case 'd':
-        newY++;
-        break;
-    default:
-        cout << "Invalid move. Try again!: " << endl;
-        return false;
-    }
-
-    if (newX >= 0 && newX < game.playingField.width && newY >= 0 && newY < game.playingField.height) {
-        game.player.playerCoordinates.x = newX;
-        game.player.playerCoordinates.y = newY;
-        return true;
-    } else {
-        cout << "Movement out of borders. Try again!: " << endl;
-        return false;
-    }
-}
-
-void handleField(Game& game) {
-    Fields currentField = game.playingField.world[game.player.playerCoordinates.x][game.player.playerCoordinates.y];
-    switch (currentField) {
-    case none:
-        break;
-    case danger:
-        if (rand() % 6 == 0) {
-            game.player.health--;
-            cout << "Danger! You lost a health point." << endl;
-        } else {
-            cout << "Danger! Lucky you: You escaped." << endl;
-        }
-        break;
-    case well:
-        game.player.health++;
-        cout << "You have found a well and get a health point." << endl;
-        break;
-    case relic:
-        game.player.relicsGathered++;
-        game.playingField.relicsTotal--;
-        cout << "You found a relic!" << endl;
-        break;
-    case alreadyVisited:
-        break;
-    default:
-        break;
-    }
-
-    game.playingField.world[game.player.playerCoordinates.x][game.player.playerCoordinates.y] = alreadyVisited;
-}
-
-void printStatus(Game game) {
-    cout << "Health: " << game.player.health << "; Gathered relics: " << game.player.relicsGathered << endl;
-    cout << "Remaining relics: " << game.playingField.relicsTotal << endl;
-    cout << " " << endl;
-}
-
-void printWorld(Game game){
-    for(int i = 0; i < game.playingField.width; i++){
-        for(int j = 0; j < game.playingField.height; j++){
-            if (i == game.player.playerCoordinates.x && j == game.player.playerCoordinates.y){
-                cout << "X" << " ";
-            }
-            else if(game.playingField.world[i][j] != alreadyVisited){
-                cout << "?" << " ";
+    void handleField(){
+        Fields currentField = this->playingField.world[this->player.playerCoordinates.x][this->player.playerCoordinates.y];
+        switch (currentField) {
+        case none:
+            break;
+        case danger:
+            if (rand() % 6 == 0) {
+                this->player.health--;
+                cout << "Danger! You lost a health point." << endl;
             } else {
-                cout << "-" << " ";
+                cout << "Danger! Lucky you: You escaped." << endl;
             }
-
-        }
-        cout << " " << endl;
-    }
-}
-
-void testGame() {
-    Game testGame;
-    initializeWorld(testGame);
-
-    // Test: Initialization
-    assert(testGame.player.health == 5);
-    assert(testGame.player.relicsGathered == 0);
-    assert(testGame.playingField.relicsTotal > 0);
-
-    // Test: Movement within borders
-    bool canMove = moveCharacter(testGame);
-    assert(canMove == true);
-    assert(testGame.player.playerCoordinates.y == 1);
-
-    // Test: Movement out of borders
-    testGame.player.playerCoordinates.x = 0; testGame.player.playerCoordinates.y = 0;
-    canMove = moveCharacter(testGame);
-    assert(canMove == false);
-
-    // Test: gather relict
-    testGame.playingField.world[1][1] = relic;
-    testGame.player.playerCoordinates.x = 1; testGame.player.playerCoordinates.y = 1;
-    int relicsBefore = testGame.playingField.relicsTotal;
-    handleField(testGame);
-    assert(testGame.player.relicsGathered == 1);
-    assert(relicsBefore == testGame.playingField.relicsTotal + 1);
-
-    cout << "All tests successful." << endl;
-}
-
-void testPlayThrough(Game& game){
-    char moves[4] = {'w', 'a', 's', 'd'};
-    int moveCount = 0;
-
-    while (game.player.health > 0 && game.playingField.relicsTotal != 0) {
-        printWorld(game);
-        game.player.currentMove = moves[rand() % 4];
-
-        if (moveCharacter(game)) {
-            handleField(game);
-        }
-
-        moveCount++;
-
-        if (moveCount > 1000) {
-            cout << "Stopped game to prevent endless loop after more then 1000 moves." << endl;
+            break;
+        case well:
+            this->player.health++;
+            cout << "You have found a well and get a health point." << endl;
+            break;
+        case relic:
+            this->player.relicsGathered++;
+            this->playingField.relicsTotal--;
+            cout << "You found a relic!" << endl;
+            break;
+        case alreadyVisited:
+            break;
+        default:
             break;
         }
-        printStatus(game);
+
+        this->playingField.world[this->player.playerCoordinates.x][this->player.playerCoordinates.y] = alreadyVisited;
     }
-}
+
+    bool moveCharacter(){
+        int newX = this->player.playerCoordinates.x;
+        int newY = this->player.playerCoordinates.y;
+        switch (this->player.currentMove) {
+        case 'w':
+            newX--;
+            break;
+        case 'a':
+            newY--;
+            break;
+        case 's':
+            newX++;
+            break;
+        case 'd':
+            newY++;
+            break;
+        default:
+            cout << "Invalid move. Try again!: " << endl;
+            return false;
+        }
+
+        if (newX >= 0 && newX < this->playingField.width && newY >= 0 && newY < this->playingField.height) {
+            this->player.playerCoordinates.x = newX;
+            this->player.playerCoordinates.y = newY;
+            return true;
+        } else {
+            cout << "Movement out of borders. Try again!: " << endl;
+            return false;
+        }
+    }
+
+    void printStatus(){
+        cout << "Health: " << this->player.health << "; Gathered relics: " << this->player.relicsGathered << endl;
+        cout << "Remaining relics: " << this->playingField.relicsTotal << endl;
+        cout << " " << endl;
+    }
+
+    void printWorld(){
+        for(int i = 0; i < this->playingField.width; i++){
+            for(int j = 0; j < this->playingField.height; j++){
+                if (i == this->player.playerCoordinates.x && j == this->player.playerCoordinates.y){
+                    cout << "X" << " ";
+                }
+                else if(this->playingField.world[i][j] != alreadyVisited){
+                    cout << "?" << " ";
+                } else {
+                    cout << "-" << " ";
+                }
+
+            }
+            cout << " " << endl;
+        }
+    }
+
+    void testGame(){
+        this->initializeWorld();
+
+        // Test: Initialization
+        assert(this->player.health == 5);
+        assert(this->player.relicsGathered == 0);
+        assert(this->playingField.relicsTotal > 0);
+
+        // Test: Movement within borders
+        this->player.currentMove = 'd';
+        bool canMove = moveCharacter();
+        assert(canMove == true);
+        assert(this->player.playerCoordinates.y == 1);
+
+        // Test: Movement out of borders
+        this->player.playerCoordinates.x = 0; this->player.playerCoordinates.y = 0;
+        canMove = this->moveCharacter();
+        assert(canMove == false);
+
+        // Test: gather relict
+        this->playingField.world[1][1] = relic;
+        this->player.playerCoordinates.x = 1; this->player.playerCoordinates.y = 1;
+        int relicsBefore = this->playingField.relicsTotal;
+        this->handleField();
+        assert(this->player.relicsGathered == 1);
+        assert(relicsBefore == this->playingField.relicsTotal + 1);
+
+        cout << "All tests successful." << endl;
+    }
+
+    void testPlayThrough(){
+        char moves[4] = {'w', 'a', 's', 'd'};
+        int moveCount = 0;
+
+        while (this->player.health > 0 && this->playingField.relicsTotal != 0) {
+            this->printWorld();
+            this->player.currentMove = moves[rand() % 4];
+
+            if (this->moveCharacter()) {
+                this->handleField();
+            }
+
+            moveCount++;
+
+            if (moveCount > 1000) {
+                cout << "Stopped game to prevent endless loop after more then 1000 moves." << endl;
+                break;
+            }
+            this->printStatus();
+        }
+    }
+} Game;
 
 
 int main()
@@ -207,25 +207,25 @@ int main()
     srand(static_cast<unsigned int>(time(0)));
     Game game;
 
-    initializeWorld(game);
-    handleField(game);
-    printStatus(game);
+    game.initializeWorld();
+    game.handleField();
+    game.printStatus();
 
-    // testGame();
-    //testPlayThrough(game);
+    game.testGame();
+    game.testPlayThrough();
 
     while (game.player.health > 0 && game.playingField.relicsTotal != 0) {
         cout << " " << endl;
-        printWorld(game);
+        game.printWorld();
         cout << "Enter your next move (w = up, a = left, s = down, d = right, x = end game): ";
         cin >> game.player.currentMove;
         if (game.player.currentMove == 'x') {
             cout << "Game ended." << endl;
             break;
         }
-        if (moveCharacter(game)) {
-            handleField(game);
-            printStatus(game);
+        if (game.moveCharacter()) {
+            game.handleField();
+            game.printStatus();
         }
     }
 
