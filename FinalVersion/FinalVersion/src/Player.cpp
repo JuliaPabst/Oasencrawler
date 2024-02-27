@@ -62,6 +62,14 @@ bool Player::getLastGameWon(){
     return lastGameWon_;
 }
 
+void Player::setX(int newX){
+    x_ = newX;
+}
+
+void Player::setY(int newY){
+    y_ = newY;
+}
+
 void Player::setHealth(int newHealth){
     health_ = newHealth;
 }
@@ -70,24 +78,28 @@ void Player::setCurrentMove(char newMove){
     currentMove_ = newMove;
 }
 
-void Player::setSpinach(int newSpinach){
-    spinach_ = newSpinach;
+void Player::incrementSpinach(){
+    spinach_++;
 }
 
-void Player::setRedBull(int newRedBull){
-    redBull_ = newRedBull;
+void Player::incrementRedBull(){
+    redBull_++;
 }
 
-void Player::setWalnut(int newWalnut){
-    walnut_ = newWalnut;
+void Player::incrementWalnut(){
+    walnut_++;
+}
+
+void Player::incrementRelicsGathered(){
+    relicsGathered_++;
 }
 
 void Player::setRelicsGathered(int newRelics){
     relicsGathered_ = newRelics;
 }
 
-void Player::setLevel(int newLevel){
-    level_ = newLevel;
+void Player::incrementLevel(){
+    level_++;
 }
 
 void Player::setLastGameWon(bool newStatus){

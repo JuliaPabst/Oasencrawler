@@ -109,16 +109,13 @@ void World::handleField(Player& player){
 
         int artefact = rand() % 3;
         if(artefact == 0){
-            int currentSpinach = player.getSpinach();
-            player.setSpinach(++currentSpinach);
+            player.incrementSpinach();
             cout << "You found a can of spinach!" << endl;
         } else if (artefact == 1){
-            int currentRedBull = player.getRedBull();
-            player.setRedBull(++currentRedBull);
+            player.incrementRedBull();
             cout << "You found a can of red bull!" << endl;
         } else {
-            int currentWalnut = player.getWalnut();
-            player.setWalnut(++currentWalnut);
+            player.incrementWalnut();
             cout << "You found a walnut!" << endl;
         }
 
@@ -132,16 +129,13 @@ void World::handleField(Player& player){
 
         int artefact = rand() % 3;
         if(artefact == 0){
-            int currentSpinach = player.getSpinach();
-            player.setSpinach(++currentSpinach);
+            player.incrementSpinach();
             cout << "You found a can of spinach!" << endl;
         } else if (artefact == 1){
-            int currentRedBull = player.getRedBull();
-            player.setRedBull(++currentRedBull);
+            player.incrementRedBull();
             cout << "You found a can of red bull!" << endl;
         } else {
-            int currentWalnut = player.getWalnut();
-            player.setWalnut(++currentWalnut);
+            player.incrementWalnut();
             cout << "You found a walnut!" << endl;
         }
 
@@ -183,4 +177,8 @@ int World::getWidth(){
 
 int World::getHeight(){
     return height_;
+}
+
+void World::setWorld1(enum Fields field){
+    world_[1][1] = relic;
 }

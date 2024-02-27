@@ -21,14 +21,17 @@ class Player
         int getRelicsGathered();
         int getLevel();
         bool getLastGameWon();
+        void setX(int newX);
+        void setY(int newY);
         void setHealth(int newHealth);
         void setCurrentMove(char newMove);
-        void setSpinach(int newSpinach);
-        void setRedBull(int newRedBull);
-        void setWalnut(int newWalnut);
-        void setRelicsGathered(int newRelics);
-        void setLevel(int newLevel);
         void setLastGameWon(bool newStatus);
+        void setRelicsGathered(int newRelics);
+        void incrementSpinach();
+        void incrementRedBull();
+        void incrementWalnut();
+        void incrementRelicsGathered();
+        void incrementLevel();
         void printStatus(World world);
         bool moveCharacter(World world);
 

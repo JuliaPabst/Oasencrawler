@@ -2,6 +2,7 @@
 #include "World.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "tests.h"
 
 using namespace std;
 
@@ -10,6 +11,12 @@ int main()
     Player player;
     World world;
     Enemy enemy;
+    Tests test;
+
+    //test.testGame(world, player, enemy);
+
+    test.testPlayThrough(world, player, enemy);
+
 
    while (player.getLastGameWon() && player.getCurrentMove() != 'n' && player.getCurrentMove() != 'x') {
 
@@ -50,14 +57,13 @@ int main()
             if(player.getCurrentMove() == 'n') {
                 return 0;
             }
-            int currentLevel = player.getLevel();
-            player.setLevel(currentLevel++);
+            player.incrementLevel();
         } else if (player.getHealth() <= 0) {
             world.printWorld(player, enemy);
             player.setLastGameWon(false);
             cout << "Damn it, you lost! The enemy caught you!" << endl;
             return 0;
-        } else if (player.getX() == enemy.getX() || player.getY() == enemy.getY()) {
+        } else if (player.getX() == enemy.getX() && player.getY() == enemy.getY()) {
             world.printWorld(player, enemy);
             player.setLastGameWon(false);
             cout << "Damn it, you lost! You don't have any more health points!" << endl;

@@ -22,6 +22,7 @@ class World
         int getRelicsTotal();
         int getWidth();
         int getHeight();
+        void setWorld1(enum Fields field);
 
     private:
         int width_ = WIDTH;
