@@ -14,8 +14,7 @@ int main()
     Tests test;
 
     //test.testGame(world, player, enemy);
-
-    test.testPlayThrough(world, player, enemy);
+    //test.testPlayThrough(world, player, enemy);
 
 
    while (player.getLastGameWon() && player.getCurrentMove() != 'n' && player.getCurrentMove() != 'x') {
